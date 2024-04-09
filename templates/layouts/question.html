@@ -3,7 +3,7 @@
   <div class="row g-0">
     <div class="col-md-3 p-2">
       <div class="border w-100 mb-3" style="height: 100px;">
-        <img src="{% static 'img/img.jpg' %}" class="img-fluid rounded-start" alt="Oops!">
+        <img src="{% static 'img/loopa.png' %}" class="img-fluid rounded-start h-100" alt="Oops!">
       </div>
 
       <div class="input-group flex-nowrap">
@@ -13,13 +13,10 @@
 
     <div class="col-md-9">
       <div class="card-body">
-        <h5 class="card-title">
-          <a href="{% url "question" item.id %}">{{ item.title }}</a></h5>
-        <p class="card-text">
-          {{ item.text }}  
-        </p>
+        <h5 class="card-title"><a href="{% url "question" item.id %}">{{ item.title }}</a></h5>
+        <p class="card-text">{{ item.text }}</p>
         <div class="row">
-          <a href="question.html" class="col-4">Answer (3)</a>
+          <a href="{% url "question" item.id %}" class="col-4">Answer (3)</a>
           <div class="col-8">
             <span>Tags</span>
             <a href="tag.html">tag</a>
@@ -34,7 +31,6 @@
     </div>
   </div>
 </article>
-
 
 
 

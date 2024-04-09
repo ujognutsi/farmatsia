@@ -3,17 +3,16 @@
 
 {% block title %}
   <div class="d-flex gap-3 align-items-center">
-    <h1 class="new_questions">New questions</h1>
-    <a href="{% url "hot" %}" class="link">Hot questions</a>
+    <h1 class="question">Question</h1>
   </div>
   {% endblock %}
 
   {% block content %}
   <div class="col-8">
-    {% for question in questions %}
-      {% include './layouts/question.html' with item=question %}  
-    {% endfor %}
+    {% include './layouts/question.html' with item=question %}
+    <hr>  
 
+    {% include './layouts/answer.html' %}
     {% include "./layouts/pagination.html" with page_obj=questions %}
   </div>
 {% endblock %}
