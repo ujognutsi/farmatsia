@@ -20,17 +20,17 @@
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
         
-        <button class="btn btn-success"><a href="/ask" class="link link-light link-underline-opacity-0 link-underline-opacity-0-hover">ASK!</a></button>
+        <button class="btn btn-success"><a href="{% url "ask" %}" class="link link-light link-underline-opacity-0 link-underline-opacity-0-hover">ASK!</a></button>
 
         <div class="d-flex justify-content-between gap-3">
           <div class="border">
-              <img src="../static/img/image.jpg" alt="Oops!" width="50px" height="50px">
+              <img src="{% static 'img/image.jpg' %}" alt="Oops!" width="50px" height="50px">
           </div>
             
           <div class="d-flex flex-column justify-content-between">
             <div>Malkhasyan Yury</div>
             <div>
-              <a href="/settings" class="link">Settings</a>
+              <a href="{% url "settings" %}" class="link">Settings</a>
               <a href="/logout" class="link">log out</a>
             </div>
           </div>
@@ -49,14 +49,14 @@
           <h3>Popular Tags</h3>
           <div class="row">
             <div class="col">
-              <span class="badge text-bg-primary m-1"><a href="tag.html" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">perl</a></span>
-              <span class="badge text-bg-secondary m-1"><a href="tag.html" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">python</a></span>
-              <span class="badge text-bg-success m-1"><a href="tag.html" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">TechnoPark</a></span>
-              <span class="badge text-bg-danger m-1"><a href="tag.html" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">MySQL</a></span>
-              <span class="badge text-bg-warning m-1"><a href="tag.html" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">django</a></span>
-              <span class="badge text-bg-info m-1"><a href="tag.html" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">Mail.Ru</a></span>
-              <span class="badge text-bg-light m-1"><a href="tag.html" class="link-dark link-underline-opacity-0 link-underline-opacity-0-hover">Voloshin</a></span>
-              <span class="badge text-bg-dark m-1"><a href="tag.html" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">Firefox</a></span>
+              <span class="badge text-bg-primary m-1"><a href="{% url "tag" 'perl' %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">perl</a></span>
+              <span class="badge text-bg-secondary m-1"><a href="{% url "tag" 'python' %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">python</a></span>
+              <span class="badge text-bg-success m-1"><a href="{% url "tag" 'TechnoPark' %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">TechnoPark</a></span>
+              <span class="badge text-bg-danger m-1"><a href="{% url "tag" 'MySQL' %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">MySQL</a></span>
+              <span class="badge text-bg-warning m-1"><a href="{% url "tag" 'django' %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">django</a></span>
+              <span class="badge text-bg-info m-1"><a href="{% url "tag" 'mail_ru' %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">Mail.Ru</a></span>
+              <span class="badge text-bg-light m-1"><a href="{% url "tag" 'Voloshin' %}" class="link-dark link-underline-opacity-0 link-underline-opacity-0-hover">Voloshin</a></span>
+              <span class="badge text-bg-dark m-1"><a href="{% url "tag" 'Firefox' %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">Firefox</a></span>
             </div>
           </div>
           <h3 class="mt-5">Best Members</h3>

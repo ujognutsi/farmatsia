@@ -20,5 +20,10 @@ from app import views
 
 urlpatterns = [
     path('', include('app.urls'), name='index'),
-    path('admin/', admin.site.urls)
+    path('admin/', admin.site.urls),
+    #path('login/', include('app.urls'), name='login'),
+    #path('/hot/', include('app.urls'), name='hot'),
+    path('tag/', include('app.urls'), name='tag'),
+    path('question/', include('app.urls'), name='question'),
+    
 ]

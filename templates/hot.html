@@ -2,18 +2,18 @@
 {% load static %}
 
 {% block title %}
-<div class="d-flex gap-3 align-items-center">
+  <div class="d-flex gap-3 align-items-center">
     <h1 class="hot_questions">Hot questions</h1>
-    <a href="/" class="link">New questions</a>
-</div>
+    <a href="{% url "index" %}" class="link">New questions</a>
+  </div>
 {% endblock %}
 
 {% block content %}
-<div class="col-8">
+  <div class="col-8">
     {% for question in questions %}
       {% include "./layouts/question.html" with item=question %}  
     {% endfor %}
 
     {% include "./layouts/pagination.html" with page_obj=questions %}
-</div>
+  </div>
 {% endblock %}
