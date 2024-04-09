@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import render
 from django.core.paginator import Paginator
 
@@ -48,7 +49,7 @@ def tag(request, tag_name = str()):
     for question in QUESTIONS:
         if tag_name in question.get('tags'):
             tag_questions.append(question)
-    return render(request, 'tag.html', {'questions': paginate(tag_questions, request, 10) })
+    return render(request, 'tag.html', {'questions': paginate(tag_questions, request, 10), 'tag': tag_name })
     
 
 # QUESTIONS - это массив словарей, каждый словарь - это вопрос, у каждого вопроса есть айди, титул, текст и тэги (массив)
