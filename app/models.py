@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
+from django.db.models.functions import Coalesce
+from datetime import date
 
 # Create your models here.
 class TagManager(models.Manager):
@@ -16,9 +18,11 @@ class QuestionManager(models.Manager):
     def get_by_tag(self, Tag):
         return self.filter(Tag in self.tags)
     
-    # def get_hot(self):
-    #     return self.filter(self.id == question_id )
+    def get_hot(self):
+        return self.annotate(likes=Coalesce(models.Sum('questionlike__value'), 0)).order_by('-likes')
 
+    def get_new(self):
+        return self.filter(created_at__day=date.today())
 
 class Question(models.Model):
     title = models.CharField(max_length=255)
@@ -57,8 +61,8 @@ class QuestionLikeManager(models.Manager):
     pass
 
 class QuestionLike(models.Model):
-    question_id = models.ManyToOneRel(Question, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
+    user_id = models.OneToOneField(Profile, on_delete=models.CASCADE)
     unique_together = [
         ['question_id', 'user_id']
     ]
@@ -70,8 +74,8 @@ class AnswerLikeManager(models.Manager):
     pass
 
 class AnswerLike(models.Model):
-    answer_id = models.OneToOneField(Answer, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    answer_id = models.ForeignKey(Answer, on_delete=models.CASCADE)
+    user_id = models.OneToOneField(Profile, on_delete=models.CASCADE)
     unique_together = [
         ['answer_id', 'user_id']
     ]
