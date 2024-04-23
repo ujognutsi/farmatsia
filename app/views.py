@@ -1,6 +1,6 @@
 from django.http import Http404
 from django.shortcuts import render
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, InvalidPage
 
 # Create your views here.
 QUESTIONS = []
@@ -18,7 +18,11 @@ for i in range(1,40):
 def paginate(objects_list, request, per_page=10):
     page_num = request.GET.get('page', 1)
     paginator = Paginator(objects_list, per_page)
-    page_obj = paginator.page(page_num)
+    #page_obj = paginator.page(page_num)
+    try:
+        page_obj = paginator.page(page_num)
+    except InvalidPage:
+        page_obj = paginator.page(1)
     return page_obj
 
 def index(request):
