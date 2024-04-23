@@ -19,7 +19,7 @@ class QuestionManager(models.Manager):
         return self.filter(Tag in self.tags)
     
     def get_hot(self):
-        return self.annotate(likes=Coalesce(models.Sum('questionlike__value'), 0)).order_by('-likes')
+        return self.annotate(likes=Coalesce(models.Sum('questionlike'), 0)).order_by('-likes')
 
     def get_new(self):
         return self.filter(created_at__day=date.today())
@@ -27,7 +27,7 @@ class QuestionManager(models.Manager):
 class Question(models.Model):
     title = models.CharField(max_length=255)
     text = models.CharField(max_length=65535)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = QuestionManager()
@@ -43,6 +43,7 @@ class Answer(models.Model):
     text = models.CharField(max_length=65535)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    vr = models.CharField(max_length=12)
 
     def __str__(self):
         return self.title
@@ -68,7 +69,7 @@ class QuestionLike(models.Model):
     ]
 
     def __str__(self):
-        return self.question_id
+        return str(self.question_id)
 
 class AnswerLikeManager(models.Manager):
     pass
