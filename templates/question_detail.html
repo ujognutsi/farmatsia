@@ -9,10 +9,10 @@
 
   {% block content %}
   <div class="col-8">
-    {% include './layouts/question.html' with item=question %}
+    {% include './components/question.html' with item=question %}
     <hr>  
 
-    {% include './layouts/answer.html' %}
-    {% include "./layouts/pagination.html" with page_obj=questions %}
+    {% include './components/answer.html' %}
+    {% include "./components/pagination.html" with page_obj=questions %}
   </div>
 {% endblock %}
