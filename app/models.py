@@ -62,8 +62,8 @@ class QuestionLikeManager(models.Manager):
     pass
 
 class QuestionLike(models.Model):
-    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
-    user_id = models.OneToOneField(Profile, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    user = models.OneToOneField(Profile, on_delete=models.CASCADE)
     unique_together = [
         ['question_id', 'user_id']
     ]
@@ -75,8 +75,8 @@ class AnswerLikeManager(models.Manager):
     pass
 
 class AnswerLike(models.Model):
-    answer_id = models.ForeignKey(Answer, on_delete=models.CASCADE)
-    user_id = models.OneToOneField(Profile, on_delete=models.CASCADE)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+    user = models.OneToOneField(Profile, on_delete=models.CASCADE)
     unique_together = [
         ['answer_id', 'user_id']
     ]
