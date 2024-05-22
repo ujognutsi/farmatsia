@@ -1,0 +1,6 @@
+*.git/
+venv/
+./app/__pycache__/
+./askme_malkhasyan/__pycache/
+db.sqlite3
+*
