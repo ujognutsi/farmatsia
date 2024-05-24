@@ -3,5 +3,4 @@ venv/
 ./app/__pycache__/
 ./askme_malkhasyan/__pycache/
 db.sqlite3
-requirements.txt
 *
