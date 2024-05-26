@@ -1,19 +1,20 @@
 from django.http import Http404
 from django.shortcuts import render
 from django.core.paginator import Paginator, InvalidPage
+from app.models import *
 
 # Create your views here.
-QUESTIONS = []
-for i in range(1,40):
-    tags_arr = []
-    for j in range (1, i+1):
-        tags_arr.append('tag' + str(j))          # массив строк!!
-    QUESTIONS.append({
-        'title': 'title' + str(i), 
-        'id': i, 
-        'text': 'text' + str(i),
-        'tags': tags_arr
-    })
+QUESTIONS = list(Question.objects.all())
+# for i in range(1,40):
+#     tags_arr = []
+#     for j in range (1, i+1):
+#         tags_arr.append('tag' + str(j))          # массив строк!!
+#     QUESTIONS.append({
+#         'title': 'title' + str(i), 
+#         'id': i, 
+#         'text': 'text' + str(i),
+#         'tags': tags_arr
+#     })
 
 def paginate(objects_list, request, per_page=10):
     page_num = request.GET.get('page', 1)

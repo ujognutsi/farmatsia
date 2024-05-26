@@ -43,7 +43,7 @@ class Answer(models.Model):
     text = models.CharField(max_length=65535)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    vr = models.CharField(max_length=12)
+#    vr = models.CharField(max_length=12)
 
     def __str__(self):
         return self.title

@@ -19,7 +19,10 @@
           <a href="{% url "question" item.id %}" class="col-4">Answer (3)</a>
           <div class="col-8">
             <span>Tags</span>
-            {% for tag in item.tags %}
+            {% comment %} {% for tag in item.tags %}
+              <a href="{% url "tag" tag %}">{{ tag }}</a>
+            {% endfor %} {% endcomment %}
+            {% for tag in item.tags.all %}
               <a href="{% url "tag" tag %}">{{ tag }}</a>
             {% endfor %}
           </div>
