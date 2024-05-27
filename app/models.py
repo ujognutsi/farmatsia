@@ -63,9 +63,12 @@ class QuestionLikeManager(models.Manager):
 
 class QuestionLike(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    user = models.OneToOneField(Profile, on_delete=models.CASCADE)
-    unique_together = [
-        ['question_id', 'user_id']
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    # unique_together = [
+    #     ['question', 'user']
+    # ]
+    constraints = [
+        models.UniqueConstraint(fields=['question', 'user'], name='unique like')
     ]
 
     def __str__(self):
@@ -76,9 +79,9 @@ class AnswerLikeManager(models.Manager):
 
 class AnswerLike(models.Model):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
-    user = models.OneToOneField(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     unique_together = [
-        ['answer_id', 'user_id']
+        ['answer', 'user']
     ]
 
     def __str__(self):

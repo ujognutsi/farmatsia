@@ -16,7 +16,7 @@
         <h5 class="card-title"><a href="{% url "question" item.id %}">{{ item.title }}</a></h5>
         <p class="card-text">{{ item.text }}</p>
         <div class="row">
-          <a href="{% url "question" item.id %}" class="col-4">Answer (3)</a>
+          <a href="{% url "question" item.id %}" class="col-4">Answer ({{ answers }})</a>
           <div class="col-8">
             <span>Tags</span>
             {% comment %} {% for tag in item.tags %}

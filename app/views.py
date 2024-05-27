@@ -5,16 +5,7 @@ from app.models import *
 
 # Create your views here.
 QUESTIONS = list(Question.objects.all())
-# for i in range(1,40):
-#     tags_arr = []
-#     for j in range (1, i+1):
-#         tags_arr.append('tag' + str(j))          # массив строк!!
-#     QUESTIONS.append({
-#         'title': 'title' + str(i), 
-#         'id': i, 
-#         'text': 'text' + str(i),
-#         'tags': tags_arr
-#     })
+ANSWERS = list(Answer.objects.all())
 
 def paginate(objects_list, request, per_page=10):
     page_num = request.GET.get('page', 1)
@@ -44,7 +35,8 @@ def hot(request):
 
 def question(request, question_id):
     item = QUESTIONS[question_id - 1]
-    return render(request, 'question_detail.html', {'question': item })
+    answers = len(list(Answer.objects.filter(question=item)))
+    return render(request, 'question_detail.html', {'question': item, 'answers': answers })
 
 def settings(request):
     return render(request, 'settings.html')
