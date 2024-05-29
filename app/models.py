@@ -95,5 +95,5 @@ class AnswerLike(models.Model):
     def __str__(self):
         return self.answer_id
     
-class CustomUser(User):
-    avatar = models.ImageField()
+# class CustomUser(User):
+#     avatar = models.ImageField()

@@ -2,52 +2,24 @@
 {% load static %}
 {% load bootstrap5 %}
 {% block title %}
-  {% comment %} {% if flag %} {% endcomment %}
-    {% comment %} <div class="d-flex gap-3 align-items-center">
-      <h1>Log In</h1>
-    </div>
-    <div class="row">
-      <div class="alert alert-danger" role="alert">
-        Sorry, wrong password!
-      </div>
-    </div> {% endcomment %}
-  {% comment %} {% endif %} {% endcomment %}
+<div class="d-flex gap-3 align-items-center">
+  <h1>Log In</h1>
+</div>
+  
 {% endblock %}
 
 {% block content %}
 <div class="col-md-10 sm-12">
-{% comment %} <div class="col-md-10 sm-12">
-  <form method="post" action="{% url "login" %}" continue="{% url "index" %}">
-    <div class="row">
-      <div class="mt-3 mb-3 d-flex align-items-center">
-        <div class="col-1 ps-2">
-          <label for="label_login" class="form-label">Login</label>
-        </div>
-    
-        <div class="col-5">  
-          <input type="text" class="form-control" id="login_input" placeholder="Enter your login here" name="login">
-        </div>
-      </div>
-    </div>
-    
-    <div class="row">
-      <div class="mt-2 mb-3 d-flex align-items-center">
-        <div class="col-1 ps-2">
-          <label for="label_password" class="form-label">Password</label>
-        </div>
-        <div class="col-5">
-          <input type="password" class="form-control" id="password_input" name="password">
-        </div>
-      </div>
-    </div>
-    
+  <form method="post" action="">
+    {% bootstrap_form form %}
+    {% csrf_token %}
     <div class="row">
       <div class="mt-2 d-flex align-items-center">
         <div class="col-1"></div>
         <button class="btn btn-outline-success mt-1 col-1" type="submit">Log in!</button>
       </div>
     </div>
-
+  
     <div class="row">
       <div class="mt-3 d-flex align-items-center">
         <div class="col-1"></div>
@@ -55,22 +27,5 @@
       </div>
     </div>
   </form>
-</div> {% endcomment %}
-<form method="post" action="">
-  {% bootstrap_form form %}
-  <div class="row">
-    <div class="mt-2 d-flex align-items-center">
-      <div class="col-1"></div>
-      <button class="btn btn-outline-success mt-1 col-1" type="submit">Log in!</button>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="mt-3 d-flex align-items-center">
-      <div class="col-1"></div>
-      <a class="link" href="{% url "signup" %}">create new account</a>
-    </div>
-  </div>
-</form>
 </div>
 {% endblock %}

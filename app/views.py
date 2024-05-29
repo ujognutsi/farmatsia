@@ -29,9 +29,11 @@ def login(request):
     if request.method == 'GET':
         loginForm = LoginForm()
     if request.method == 'POST':
+        print('-------------------', user)
         loginForm = LoginForm(data=request.POST)
         if loginForm.is_valid():
             user = authenticate(request, **loginForm.cleaned_data())
+            print('-------------------', user)
         if user:
             return redirect(reverse('signup'))
     return render(request, 'login.html', {'form': loginForm })
@@ -50,8 +52,6 @@ def signup(request):
             user = registerForm.save()
             if user:
                 return redirect(reverse('index'))
-            else:
-                registerForm.add_error(field=None, error="User saving error!")
     
     return render(request, 'signup.html', {'form': registerForm })
 
@@ -73,6 +73,14 @@ def question(request, question_id):
     })
 
 def settings(request):
+
+    if request.method == 'POST':
+        editForm = EditProfileForm(data=request.POST)
+        if editForm.is_valid():
+            user = editForm.save()
+            if user:
+                return redirect(reverse('index'))
+            
     return render(request, 'settings.html')
 
 def tag(request, tag_name):
