@@ -28,7 +28,6 @@ class RegisterForm(forms.ModelForm):
         super().clean()
         if self.cleaned_data['password'] != self.cleaned_data['confirm_password']:
             raise ValidationError('Passwords don\'t match!')
-
         
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
