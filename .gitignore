@@ -1,6 +1,5 @@
 *.git/
 venv/
-./app/__pycache__/
-./askme_malkhasyan/__pycache/
+app/__pycache__/
+askme_malkhasyan/__pycache__/
 db.sqlite3
-*
