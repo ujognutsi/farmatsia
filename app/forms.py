@@ -65,3 +65,8 @@ class EditProfileForm(forms.ModelForm):
         profile.avatar = self.cleaned_data['avatar']
         profile.save()
         return user
+    
+class QuestionForm(forms.ModelForm):
+    title = forms.CharField(min_length=10, max_length=255, required=True)
+    text = forms.CharField(min_length=100, max_length=65535, required=True)
+    tagsInput = forms.CharField()
