@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 from django.contrib.postgres.fields import ArrayField
 from django.db.models.functions import Coalesce
 from datetime import date
@@ -61,7 +61,7 @@ class ProfileManager(models.Manager):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(null=True, blank=True)
+    avatar = models.ImageField(null=False, blank=True)
 
     def __str__(self):
         return self.user.username
@@ -95,3 +95,5 @@ class AnswerLike(models.Model):
     def __str__(self):
         return self.answer_id
     
+class CustomUser(User):
+    avatar = models.ImageField()
