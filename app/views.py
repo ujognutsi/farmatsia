@@ -22,25 +22,27 @@ def paginate(objects_list, request, per_page=10):
     return page_obj
 
 def index(request):
-    return render(request, 'index.html', {'questions': paginate(QUESTIONS, request, 10) })
+
+    return render(request, 'index.html', {'questions': paginate(QUESTIONS, request, 10), 'user': request.user })
 
 @require_http_methods(['GET', 'POST'])
 def login(request):
+    flag = False
     if request.method == 'GET':
         loginForm = LoginForm()
     if request.method == 'POST':
-        print('-------------------', user)
         loginForm = LoginForm(data=request.POST)
         if loginForm.is_valid():
-            user = authenticate(request, **loginForm.cleaned_data())
-            print('-------------------', user)
+            user = authenticate(request, **loginForm.cleaned_data)
         if user:
-            return redirect(reverse('signup'))
-    return render(request, 'login.html', {'form': loginForm })
+            flag = True
+            return redirect(reverse('index'))
+    return render(request, 'login.html', {'form': loginForm})
 
-def log_out(request):
-    logout(request)
-    return redirect(reverse('index'))
+def logout_view(request):
+    if request.user.is_authenticated:
+        logout(request)
+    redirect(reverse('index'))
 
 def signup(request):
     # допилить
@@ -56,7 +58,14 @@ def signup(request):
     return render(request, 'signup.html', {'form': registerForm })
 
 def ask(request):
-    return render(request, 'ask.html')
+    if request.method == 'POST':
+        questionForm = QuestionForm(data=request.POST)
+        if questionForm.is_valid():
+            question = questionForm.save()
+            if question:
+                return redirect(reverse(f'question/{question.id}'))
+            
+    return render(request, 'ask.html', {'form': questionForm})
 
 def hot(request):
     hot = Question.objects.get_hot()

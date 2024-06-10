@@ -68,4 +68,7 @@ class EditProfileForm(forms.ModelForm):
 class QuestionForm(forms.ModelForm):
     title = forms.CharField(min_length=10, max_length=255, required=True)
     text = forms.CharField(min_length=100, max_length=65535, required=True)
-    tagsInput = forms.CharField()
+    # tagsInput = forms.CharField()
+
+class AnswerForm(forms.ModelForm):
+    text = forms.CharField(min_length=100, max_length=65535, required=True)
