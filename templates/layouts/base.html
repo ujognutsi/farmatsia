@@ -39,7 +39,7 @@
             <div>{{ user.username }}</div>
             <div>
               <a href="{% url "settings" %}" class="link">Settings</a>
-              <a href="{% views.logout %}" class="link">log out</a>
+              {% comment %} <a href="{% views.logout %}" class="link">log out</a> {% endcomment %}
             </div>
           {% endif %}
 
