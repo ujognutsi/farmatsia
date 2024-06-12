@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render
 from django.core.paginator import Paginator, InvalidPage
 from django.urls import reverse
 from app.models import *
-from django.contrib.auth import *
+from django.contrib.auth import login, authenticate, logout
 from app.forms import *
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
@@ -28,8 +28,7 @@ def index(request):
     return render(request, 'index.html', {'questions': paginate(QUESTIONS, request, 10), 'user': request.user })
 
 @require_http_methods(['GET', 'POST'])
-def loginview(request):
-    flag = False
+def loginView(request):
     if request.method == 'GET':
         loginForm = LoginForm()
     if request.method == 'POST':
@@ -37,16 +36,14 @@ def loginview(request):
         if loginForm.is_valid():
             user = authenticate(request, **loginForm.cleaned_data)
         if user:
-            flag = True
             login(request, user)
             return redirect(reverse('index'))
         else:
             messages.add_message(request, ERROR, 'Authentication failed')
             return render(request, 'login.html', {'form': loginForm })
     return render(request, 'login.html', {'form': loginForm })
-    #return render(request, 'signup.html', {'form': loginForm})
 
-def logout_view(request):
+def logoutView(request):
     if request.user.is_authenticated:
         logout(request)
     redirect(reverse('index'))
