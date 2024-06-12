@@ -5,8 +5,23 @@
 <div class="d-flex gap-3 align-items-center">
   <h1>Log In</h1>
 </div>
-  
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <div class="row">
+      <div class="col-md-10 sm-12 alert alert-danger" role="alert">
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+          {{ message }}
+        </li>
+      </div>
+    </div>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}
+
+
 
 {% block content %}
 <div class="col-md-10 sm-12">
@@ -27,5 +42,8 @@
       </div>
     </div>
   </form>
+
+
+
 </div>
 {% endblock %}

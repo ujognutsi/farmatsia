@@ -6,6 +6,8 @@ from app.models import *
 from django.contrib.auth import *
 from app.forms import *
 from django.views.decorators.http import require_http_methods
+from django.contrib import messages
+from django.contrib.messages import *
 
 
 # Create your views here.
@@ -26,7 +28,7 @@ def index(request):
     return render(request, 'index.html', {'questions': paginate(QUESTIONS, request, 10), 'user': request.user })
 
 @require_http_methods(['GET', 'POST'])
-def login(request):
+def loginview(request):
     flag = False
     if request.method == 'GET':
         loginForm = LoginForm()
@@ -36,8 +38,13 @@ def login(request):
             user = authenticate(request, **loginForm.cleaned_data)
         if user:
             flag = True
+            login(request, user)
             return redirect(reverse('index'))
-    return render(request, 'login.html', {'form': loginForm})
+        else:
+            messages.add_message(request, ERROR, 'Authentication failed')
+            return render(request, 'login.html', {'form': loginForm })
+    return render(request, 'login.html', {'form': loginForm })
+    #return render(request, 'signup.html', {'form': loginForm})
 
 def logout_view(request):
     if request.user.is_authenticated:
