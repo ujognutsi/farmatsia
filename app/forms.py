@@ -65,10 +65,10 @@ class EditProfileForm(forms.ModelForm):
         profile.save()
         return user
     
-class QuestionForm(forms.ModelForm):
+class QuestionForm(forms.Form):
     title = forms.CharField(min_length=10, max_length=255, required=True)
     text = forms.CharField(min_length=100, max_length=65535, required=True)
     # tagsInput = forms.CharField()
 
-class AnswerForm(forms.ModelForm):
+class AnswerForm(forms.Form):
     text = forms.CharField(min_length=100, max_length=65535, required=True)
