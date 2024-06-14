@@ -37,7 +37,7 @@ class Question(models.Model):
     text = models.CharField(max_length=65535)
     tags = models.ManyToManyField(Tag, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    user = models.ForeignKey(User, on_delete=models.SET_NULL)
     objects = QuestionManager()
 
     def __str__(self):
@@ -51,6 +51,7 @@ class Answer(models.Model):
     text = models.CharField(max_length=65535)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL)
 #    vr = models.CharField(max_length=12)
 
     def __str__(self):
