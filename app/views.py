@@ -62,13 +62,14 @@ def signup(request):
     return render(request, 'signup.html', {'form': registerForm })
 
 def ask(request):
+    if request.method == 'GET':
+        questionForm = QuestionForm()
     if request.method == 'POST':
         questionForm = QuestionForm(data=request.POST)
         if questionForm.is_valid():
             question = questionForm.save()
             if question:
-                return redirect(reverse(f'question/{question.id}'))
-            
+                return redirect(reverse(f'question/{question.id}'))    
     return render(request, 'ask.html', {'form': questionForm})
 
 def hot(request):
