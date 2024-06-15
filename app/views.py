@@ -24,8 +24,12 @@ def paginate(objects_list, request, per_page=10):
     return page_obj
 
 def index(request):
-
-    return render(request, 'index.html', {'questions': paginate(QUESTIONS, request, 10), 'user': request.user })
+    user = request.user
+    if user.is_authenticated:
+        profile = list(Profile.objects.filter(user=user))[0]
+        return render(request, 'index.html', {'questions': paginate(QUESTIONS, request, 10), 'user': user, 
+                               'profile': profile })
+    return render(request, 'index.html', {'questions': paginate(QUESTIONS, request, 10), 'user': user}) 
 
 @require_http_methods(['GET', 'POST'])
 def loginView(request):
@@ -46,10 +50,9 @@ def loginView(request):
 def logoutView(request):
     if request.user.is_authenticated:
         logout(request)
-    redirect(reverse('index'))
+    return redirect(reverse('index'))
 
 def signup(request):
-    # допилить
     if request.method == 'GET':
         registerForm = RegisterForm()
     if request.method == 'POST':
@@ -62,14 +65,25 @@ def signup(request):
     return render(request, 'signup.html', {'form': registerForm })
 
 def ask(request):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
     if request.method == 'GET':
         questionForm = QuestionForm()
     if request.method == 'POST':
         questionForm = QuestionForm(data=request.POST)
         if questionForm.is_valid():
-            question = questionForm.save()
+            question = Question(title=questionForm.cleaned_data["title"], text=questionForm.cleaned_data["text"])
+            question.save()
             if question:
-                return redirect(reverse(f'question/{question.id}'))    
+                question.user = request.user
+                # return redirect(reverse('index'))
+                return render(request, 'question_detail.html', {
+                            'question': question, 
+                            'answersCount': 0,
+                            'form': questionForm
+                })
+            return redirect(reverse('index'))
+
     return render(request, 'ask.html', {'form': questionForm})
 
 def hot(request):
@@ -77,17 +91,55 @@ def hot(request):
     return render(request, 'hot.html', {'questions': paginate(hot, request, 10) })
 
 def question(request, question_id):
-    # на индексе не отображается количество вопросов
-    item = QUESTIONS[question_id]
+    item = QUESTIONS[question_id - 1]
     answers = list(Answer.objects.filter(question=item))
+    
+    if request.method == 'GET':
+        answerForm = AnswerForm()
+    if request.method == 'POST':
+        answerForm = AnswerForm(data=request.POST)
+        if answerForm.is_valid():
+            newAnswer = answerForm.save(commit=False)
+            newAnswer.question = item
+            newAnswer.save()
     return render(request, 'question_detail.html', {
         'question': item, 
         'answersCount': len(answers),
-        'answers': answers
+        'answers': answers,
+        'form': answerForm
     })
 
-def settings(request):
+# def addAnswer(request):
+#     return render(request, 'index.html', {'questions': paginate(QUESTIONS, request, 10), 'user': request.user}) 
+#     item = QUESTIONS[question_id - 1]
+#     answers = list(Answer.objects.filter(question=item))
+#     if not request.user.is_authenticated:
+#         return redirect(reverse('login'))
+#     if request.method == 'GET':
+#         answerForm = AnswerForm()
+#     if request.method == 'POST':
+#         answerForm = AnswerForm(data=request.POST)
+#         if answerForm.is_valid():
+#             answer = Answer(text=answerForm.cleaned_data["text"], question=question_id)
+#             answer.question = item
+#             answer.save()
+#             if answer:
+#                 answer.user = request.user
+#                 return render(request, 'question_detail.html', {
+#                     'question': item, 
+#                     'answersCount': len(answers),
+#                     'answers': answers,
+#                     'form': answerForm
+#                 })
+#                 # return question(request, question_id)
+#     return question(request, question_id)
+#     # return render(request, 'question_detail.html', {
+#     #     'question': item, 
+#     #     'answersCount': len(answers),
+#     #     'answers': answers
+#     # })
 
+def settings(request):
     if request.method == 'POST':
         editForm = EditProfileForm(data=request.POST)
         if editForm.is_valid():

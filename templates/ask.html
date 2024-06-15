@@ -9,47 +9,12 @@
 
 {% block content %}
 <div class="col-md-10 sm-12">
-  {% comment %} <div class="row">
-    <div class="mt-3 mb-3 d-flex align-items-center">
-      <div class="col-1 ps-2">
-        <label for="label_title" class="form-label">Title</label>
-      </div>
-      <div class="col-11 pe-2">  
-        <input type="text" class="form-control" id="title_input" placeholder="How to build a moon park?">
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="mt-3 mb-3 d-flex align-items-start">
-      <div class="col-1 ps-2">
-        <label for="label_question" class="form-label">Text</label>
-      </div>
-      <div class="col-11 pe-2">
-        <textarea class="form-control" id="question_textarea" rows="15" placeholder="Really, how?
-Have no idea about it"></textarea>
-      </div>
-    </div>
-    <div class="row">
-      <div class="mt-3 mb-3 d-flex align-items-start">
-        <div class="col-1 ps-2">
-          <label for="label_tags" class="form-label">Tags</label>
-        </div>
-        <div class="flex-column col-11">
-          <div class="pe-2">
-            <input type="text" class="form-control" id="tags_input" placeholder="moon, park, puzzle">
-          </div>
-          <button class="mb-2 mt-3 btn btn-outline-success" type="submit">
-            ASK!
-          </button>
-        </div>
-      </div>
-    </div>
-  </div> {% endcomment %}
-
-  {% bootstrap_form form %}
-  {% csrf_token %}
-  <button class="mb-2 mt-3 btn btn-outline-success" type="submit">
-    ASK!
-  </button>
+  <form method="post" action="{% url "ask" %}" continue="{% url "index" %}">
+    {% bootstrap_form form %}
+    {% csrf_token %}
+    <button class="mb-2 mt-3 btn btn-outline-success" type="submit">
+      ASK!
+    </button>
+  </form>
 </div>
 {% endblock %}

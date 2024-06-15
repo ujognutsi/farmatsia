@@ -1,6 +1,6 @@
 {% extends "./layouts/base.html" %}
 {% load static %}
-
+{% load bootstrap5 %}
 {% block title %}
   <div class="d-flex gap-3 align-items-center">
     <h1 class="question">Question</h1>
@@ -12,13 +12,35 @@
     {% include './components/question.html' with item=question %}
     <hr>  
 
-    {% include './components/answer.html'%}
-    <form action="post">
+    {% include './components/answer.html' %}
+    {% comment %} <form method="post" action="{% url "answer" 1 %}" continue="{% url "index" %}">
+      {% csrf_token %}
       <div class="border-top pt-3">
         <textarea id="answer_textarea" rows="5" class="form-control" placeholder="Enter your answer here.."></textarea>
-      </div>
+      </div> {% endcomment %}
+      
+    
+    <form method="post" action="{% url "answer" question.id %}" continue="{% url "index" %}">
+      {% bootstrap_form form %}
+      {% csrf_token %}
       <button class="btn btn-outline-success mt-2" type="submit">Answer</button>
     </form>
+
     {% include "./components/pagination.html" with page_obj=questions %}
+    
+
+    <ul class="messages">
+      {% for message in messages %}
+      <div class="row">
+        <div class="col-md-10 sm-12 alert alert-danger" role="alert">
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {{ message }}
+          </li>
+        </div>
+      </div>
+      {% endfor %}
+  </ul>
+
+
   </div>
 {% endblock %}

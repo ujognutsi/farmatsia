@@ -10,7 +10,7 @@ class TagManager(models.Manager):
 
 class Tag(models.Model):
     name = models.CharField(max_length=255)
-
+    
     def __str__(self):
         return self.name
 
@@ -37,7 +37,8 @@ class Question(models.Model):
     text = models.CharField(max_length=65535)
     tags = models.ManyToManyField(Tag, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
     objects = QuestionManager()
 
     def __str__(self):
@@ -47,12 +48,14 @@ class AnswerManager(models.Manager):
     pass
 
 class Answer(models.Model):
-    title = models.CharField(max_length=255)
+    # title = models.CharField(max_length=255)
     text = models.CharField(max_length=65535)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL)
-#    vr = models.CharField(max_length=12)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        ordering = ['created_at']
 
     def __str__(self):
         return self.title
@@ -73,9 +76,6 @@ class QuestionLikeManager(models.Manager):
 class QuestionLike(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    # unique_together = [
-    #     ['question', 'user']
-    # ]
     constraints = [
         models.UniqueConstraint(fields=['question', 'user'], name='unique like')
     ]
@@ -95,6 +95,3 @@ class AnswerLike(models.Model):
 
     def __str__(self):
         return self.answer_id
-    
-# class CustomUser(User):
-#     avatar = models.ImageField()

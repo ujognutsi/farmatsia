@@ -26,7 +26,8 @@ class Command(BaseCommand):
         print("Tags added")
         questions = []
         for i in range(ratio * 10):
-            questions.append(Question(id=i, title=f"Question #{i}", text=f"Question text #{i}"))
+            questions.append(Question(id=i, title=f"Question #{i}", text=f"Question text #{i}",
+                                      user=User.objects.get(id=random.randint(0, ratio))))
         
         Question.objects.bulk_create(questions)
 
@@ -38,7 +39,8 @@ class Command(BaseCommand):
 
         for i in range(ratio * 100):
             answers.append(Answer(id=i, title=f"Answer #{i}", text=f"Answer #{i} text", 
-                                  question=Question.objects.get(id=random.randint(0, ratio * 10 - 1))))
+                                  question=Question.objects.get(id=random.randint(0, ratio * 10 - 1)),
+                                  user=User.objects.get(id=random.randint(0, ratio))))
 
         Answer.objects.bulk_create(answers)
         print("Answers added")
