@@ -56,6 +56,7 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    # iscorrect = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['created_at']

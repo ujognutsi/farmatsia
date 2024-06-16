@@ -30,9 +30,15 @@ def index(request):
     user = request.user
     if user.is_authenticated:
         profile = list(Profile.objects.filter(user=user))[0]
-        return render(request, 'index.html', {'questions': paginate(QUESTIONS, request, 10), 'user': user, 
-                               'profile': profile })
-    return render(request, 'index.html', {'questions': paginate(QUESTIONS, request, 10), 'user': user}) 
+        return render(request, 'index.html', {
+            'questions': paginate(QUESTIONS, request, 10), 
+            'user': user,                    
+            'profile': profile
+            })
+    return render(request, 'index.html', {
+        'questions': paginate(QUESTIONS, request, 10), 
+        'user': user
+        }) 
 
 @require_http_methods(['GET', 'POST'])
 def loginView(request):
@@ -81,13 +87,21 @@ def ask(request):
             question.save()
             if question:
                 question.user = request.user
+                if profile:
                 # return redirect(reverse('question', args=[question.id - 1]))
+                    return render(request, 'question_detail.html', {
+                            'question': question, 
+                            'answersCount': 0,
+                            'form': questionForm,
+                            'profile': profile,
+                            'user': request.user
+                    })
                 return render(request, 'question_detail.html', {
                             'question': question, 
                             'answersCount': 0,
                             'form': questionForm,
-                            'profile': profile
-                })
+                            'user': request.user
+                    }) 
             return redirect(reverse('index'))
 
     return render(request, 'ask.html', {'form': questionForm})
@@ -97,9 +111,10 @@ def hot(request):
     return render(request, 'hot.html', {'questions': paginate(hot, request, 10) })
 
 def question(request, question_id):
-    item = QUESTIONS[question_id - 1]
+    item = Question.objects.get(id=question_id)
+    # item = QUESTIONS[question_id - 1]
     answers = list(Answer.objects.filter(question=item))
-    profile = list(Profile.objects.filter(user=request.user))[0]
+    profile = Profile.objects.get(user=request.user)
     if request.method == 'GET':
         answerForm = AnswerForm()
     if request.method == 'POST':
@@ -109,13 +124,21 @@ def question(request, question_id):
             newAnswer.question = item
             newAnswer.user = request.user
             newAnswer.save()
+        
+    if profile:
+        return render(request, 'question_detail.html', {
+            'question': item, 
+            'answersCount': len(answers),
+            'answers': answers,
+            'form': answerForm,
+            'profile': profile
+        })
     return render(request, 'question_detail.html', {
-        'question': item, 
-        'answersCount': len(answers),
-        'answers': answers,
-        'form': answerForm,
-        'profile': profile
-    })
+            'question': item, 
+            'answersCount': len(answers),
+            'answers': answers,
+            'form': answerForm
+        }) 
 
 def settings(request):
     profile = list(Profile.objects.filter(user=request.user))[0]
@@ -206,3 +229,5 @@ def questiondislike(request, question_id):
     body['dislikes_count'] = -question_like.objects.filter(question=question).count()
 
     return JsonResponse(body)
+
+# def correctanswer(request):

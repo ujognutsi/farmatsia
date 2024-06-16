@@ -16,7 +16,7 @@
         {% comment %} <button type="submit" class="mb-2 mt-3 btn btn-outline-danger dislike-button">Dislike</button> {% endcomment %}
       {% comment %} </form> {% endcomment %}
       <p class="card-text">Likes: <span class="like-counter">{{ item.likes_count }}</span></p>
-      <form method="post" action="{% url "questionlike" item.id %}">
+      {% comment %} <form method="post" action="{% url "questionlike" item.id %}"> {% endcomment %}
         {% csrf_token %}
         <button type="submit" class="mb-2 mt-3 btn btn-outline-success" name="likebutton">Like</button>
         <button type="submit" class="mb-2 mt-3 btn btn-outline-danger" name="dislikebutton">Dislike</button>

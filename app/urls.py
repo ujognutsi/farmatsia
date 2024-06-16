@@ -17,8 +17,8 @@ urlpatterns = [
     path('question/<int:question_id>', views.question, name='answer'),
     # path('<question_id>/questionlike', views.questionlike, name='questionlike'),
     path('<question_id>/questionlike', views.questionlike, name='questionlike'),
-    path('<question_id>/answerlike', views.answerlike, name='answerlike')
-    
+    path('<question_id>/answerlike', views.answerlike, name='answerlike'),
+    # path('question/<int:question_id>', views.correctanswer, name='correctanswer')
 ]
 
 if settings.DEBUG:
