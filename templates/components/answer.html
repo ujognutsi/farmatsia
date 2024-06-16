@@ -15,9 +15,9 @@
       {% if user == item.user %}
       {% comment %} <form method="POST" action="{% url "correctanswer" %}"> {% endcomment %}
       <div class="form-check mt-5" name="correcto">
-        <form method="post" action="{% url "correctanswer" item.id %}">
+        {% comment %} <form method="post" action="{% url "correctanswer" item.id %}"> {% endcomment %}
           <button type="submit" class="btn btn-success" id="correctbutton">Correct!</button>
-        </form>
+        {% comment %} </form> {% endcomment %}
       </div>
       {% endif %}
     </div>      
