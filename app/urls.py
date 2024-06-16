@@ -14,7 +14,11 @@ urlpatterns = [
     path('ask/', views.ask, name='ask'),
     path('tag/<str:tag_name>', views.tag, name='tag'),
     path('logout/', views.logoutView, name='logout'),
-    path('question/<int:question_id>', views.question, name='answer')
+    path('question/<int:question_id>', views.question, name='answer'),
+    # path('<question_id>/questionlike', views.questionlike, name='questionlike'),
+    path('<question_id>/questionlike', views.questionlike, name='questionlike'),
+    path('<question_id>/answerlike', views.answerlike, name='answerlike')
+    
 ]
 
 if settings.DEBUG:

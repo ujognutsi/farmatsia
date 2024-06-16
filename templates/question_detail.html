@@ -12,7 +12,7 @@
     {% include './components/question.html' with item=question %}
     <hr>  
 
-    {% include './components/answer.html' %}
+    {% include './components/answer.html' with item=question %}
     {% comment %} <form method="post" action="{% url "answer" 1 %}" continue="{% url "index" %}">
       {% csrf_token %}
       <div class="border-top pt-3">

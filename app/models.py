@@ -33,6 +33,8 @@ class QuestionManager(models.Manager):
         return self.filter(created_at__day=date.today())
 
 class Question(models.Model):
+    class Meta:
+        ordering = ['created_at']
     title = models.CharField(max_length=255)
     text = models.CharField(max_length=65535)
     tags = models.ManyToManyField(Tag, blank=True)
@@ -43,6 +45,7 @@ class Question(models.Model):
 
     def __str__(self):
         return self.title
+    
 
 class AnswerManager(models.Manager):
     pass

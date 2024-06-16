@@ -15,9 +15,12 @@
       <div class="card-body">
         <p class="card-text">{{ answer.text }}</p>
       </div>
+      {% if user == item.user %}
+      {% comment %} <form method="POST" action="{% url "correctanswer" %}"> {% endcomment %}
       <div class="form-check mt-5">
         <button type="button" class="btn btn-success">Correct!</button>
       </div>
+      {% endif %}
     </div>      
   </div>
 </article>

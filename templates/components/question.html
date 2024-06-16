@@ -1,14 +1,26 @@
 {% load static %}
-<article class="card mb-3 w-100">
+
+<article class="card mb-3 w-100">  
+  {% comment %} data-question-id="{{ item.id }}"> {% endcomment %}
   <div class="row g-0">
     <div class="col-md-3 p-2">
       <div class="border w-100 mb-3" style="height: 100px;">
         <img src="{% static 'img/loopa.png' %}" class="img-fluid rounded-start h-100" alt="Oops!">
       </div>
 
-      <div class="input-group flex-nowrap">
-        <input type="number" value="5" class="form-control">
-      </div>
+      {% comment %} <p class="card-text">Likes: <span class="like-counter">{{ item.likes_count }}</span></p> {% endcomment %}
+      {% comment %} <p class="card-text">Dislikes: <span class="dislike-counter">{{ item.dislikes_count }}</span></p> {% endcomment %}
+      {% comment %} <form method="post" action="{% url "questionlike" item.id %}"> {% endcomment %}
+        {% comment %} {% csrf_token %} {% endcomment %}
+        {% comment %} <button type="submit" class="mb-2 mt-3 btn btn-outline-success like-button">Like</button> {% endcomment %}
+        {% comment %} <button type="submit" class="mb-2 mt-3 btn btn-outline-danger dislike-button">Dislike</button> {% endcomment %}
+      {% comment %} </form> {% endcomment %}
+      <p class="card-text">Likes: <span class="like-counter">{{ item.likes_count }}</span></p>
+      <form method="post" action="{% url "questionlike" item.id %}">
+        {% csrf_token %}
+        <button type="submit" class="mb-2 mt-3 btn btn-outline-success" name="likebutton">Like</button>
+        <button type="submit" class="mb-2 mt-3 btn btn-outline-danger" name="dislikebutton">Dislike</button>
+      </form>
     </div>
 
     <div class="col-md-9">
@@ -28,3 +40,5 @@
     </div>
   </div>
 </article>
+
+<script src="{% static 'js/app.js' %}" type="text/javascript"></script>

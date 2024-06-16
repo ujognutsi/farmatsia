@@ -1,5 +1,6 @@
-from django.http import Http404
-from django.shortcuts import redirect, render
+import json
+from django.http import Http404, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator, InvalidPage
 from django.urls import reverse
 from app.models import *
@@ -8,10 +9,12 @@ from app.forms import *
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from django.contrib.messages import *
-
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_protect
+from django.db.models import Count
 
 # Create your views here.
-QUESTIONS = list(Question.objects.all())
+QUESTIONS = list(Question.objects.annotate(likes_count=Count('questionlike')).all())
 ANSWERS = list(Answer.objects.all())
 
 def paginate(objects_list, request, per_page=10):
@@ -73,7 +76,8 @@ def ask(request):
     if request.method == 'POST':
         questionForm = QuestionForm(data=request.POST)
         if questionForm.is_valid():
-            question = Question(title=questionForm.cleaned_data["title"], text=questionForm.cleaned_data["text"])
+            question = Question(title=questionForm.cleaned_data["title"], text=questionForm.cleaned_data["text"], 
+                                user=request.user)
             question.save()
             if question:
                 question.user = request.user
@@ -103,6 +107,7 @@ def question(request, question_id):
         if answerForm.is_valid():
             newAnswer = answerForm.save(commit=False)
             newAnswer.question = item
+            newAnswer.user = request.user
             newAnswer.save()
     return render(request, 'question_detail.html', {
         'question': item, 
@@ -137,32 +142,67 @@ def tag(request, tag_name):
     tag_questions = list(Question.objects.get_by_tag(tag_name))
     return render(request, 'tag.html', {'questions': paginate(tag_questions, request, 10), 'tag': tag_name })
 
-# @require_http_methods(["POST"])
+
+@require_http_methods(["POST"])
+@login_required(login_url="login")
+@csrf_protect
+def questionlike(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    profile, profile_created = Profile.objects.get_or_create(user=request.user)
+    questionlike, questionlike_created = QuestionLike.objects.get_or_create(question=question, user=profile)
+    if "dislikebutton" in request.POST:
+        questionlike.delete()
+    
+    return redirect(reverse('index'))
+
+
+
+@require_http_methods(["POST"])
+@login_required(login_url="login")
+@csrf_protect
+def answerlike(request, answer_id):
+    answer = get_object_or_404(Answer, pk=answer_id)
+    profile, profile_created = Profile.objects.get_or_create(user=request.user)
+    answerlike, answerlike_created = AnswerLike.objects.get_or_create(answer=answer, user=profile)
+    if not answerlike_created:
+        answerlike.delete()
+    
+    return redirect(reverse('index'))
+
+
+
 # @login_required(login_url="login")
 # @csrf_protect
-# def like(request, image_id):
-#     image = get_object_or_404(Image, pk=image_id)
-#     profile, profile_created = Profile.objects.get_or_create(user=request.user)
-#     image_like, image_like_created = ImageLike.objects.get_or_create(image=image, profile=profile)
-
-#     if not image_like_created:
-#         image_like.delete()
-
-#     return redirect(reverse('index'))
-
-
 # @require_http_methods(["POST"])
-# @login_required(login_url="login")
-# @csrf_protect
-# def like_async(request, image_id):
+# def questionlike(request, question_id):
+#     print(request.body)
 #     body = json.loads(request.body)
-#     image = get_object_or_404(Image, pk=image_id)
+#     question = get_object_or_404(Question, pk=question_id)
 #     profile, profile_created = Profile.objects.get_or_create(user=request.user)
-#     image_like, image_like_created = ImageLike.objects.get_or_create(image=image, profile=profile)
+#     question_like, question_like_created = QuestionLike.objects.get_or_create(question=question, user=profile)
 
-#     if not image_like_created:
-#         image_like.delete()
+#     if not question_like_created:
+#         question_like.delete()
 
-#     body['likes_count'] = ImageLike.objects.filter(image=image).count()
+#     body['likes_count'] = question_like.objects.filter(question=question).count()
 
 #     return JsonResponse(body)
+
+
+
+@login_required(login_url="login")
+@csrf_protect
+@require_http_methods(["POST"])
+def questiondislike(request, question_id):
+    body = json.loads(request.body)
+    print(request.body)
+    question = get_object_or_404(Question, pk=question_id)
+    profile, profile_created = Profile.objects.get_or_create(user=request.user)
+    question_like, question_like_created = QuestionLike.objects.get_or_create(question=question, user=profile)
+
+    if not question_like_created:
+        question_like.delete()
+
+    body['dislikes_count'] = -question_like.objects.filter(question=question).count()
+
+    return JsonResponse(body)
