@@ -67,6 +67,7 @@ def signup(request):
 def ask(request):
     if not request.user.is_authenticated:
         return redirect(reverse('login'))
+    profile = list(Profile.objects.filter(user=request.user))[0]
     if request.method == 'GET':
         questionForm = QuestionForm()
     if request.method == 'POST':
@@ -80,7 +81,8 @@ def ask(request):
                 return render(request, 'question_detail.html', {
                             'question': question, 
                             'answersCount': 0,
-                            'form': questionForm
+                            'form': questionForm,
+                            'profile': profile
                 })
             return redirect(reverse('index'))
 
@@ -93,7 +95,7 @@ def hot(request):
 def question(request, question_id):
     item = QUESTIONS[question_id - 1]
     answers = list(Answer.objects.filter(question=item))
-    
+    profile = list(Profile.objects.filter(user=request.user))[0]
     if request.method == 'GET':
         answerForm = AnswerForm()
     if request.method == 'POST':
@@ -106,23 +108,61 @@ def question(request, question_id):
         'question': item, 
         'answersCount': len(answers),
         'answers': answers,
-        'form': answerForm
+        'form': answerForm,
+        'profile': profile
     })
 
 def settings(request):
+    profile = list(Profile.objects.filter(user=request.user))[0]
     if request.method == 'POST':
-        editForm = EditProfileForm(data=request.POST, files=request.FILES)
-        editUser = User()
-        if editForm.is_valid():
-            user = editForm.save()
-            if user:
-                return redirect(reverse('index'))
+        editUserForm = EditUserForm(data=request.POST, instance=request.user)
+        editUserForm.actual_user = request.user
+        editProfileForm = EditProfileForm(data=request.POST, files=request.FILES, instance=Profile.objects.get(user=request.user))
+        # editUser = User()
+        if editProfileForm.is_valid() and editUserForm.is_valid():
+            editUserForm.save()
+            editProfileForm.save()
+            messages.success(request, 'Profile is updated')
+            return redirect(reverse('settings'))
     else:
-        editForm = EditProfileForm()    
+        editUserForm = EditUserForm(instance=request.user)
+        editProfileForm = EditProfileForm(instance=Profile.objects.get(user=request.user))
     return render(request, 'settings.html', {
-        'form': editForm
+        'userform': editUserForm,
+        'profileform': editProfileForm,
+        'profile': profile
     })
 
 def tag(request, tag_name):
     tag_questions = list(Question.objects.get_by_tag(tag_name))
     return render(request, 'tag.html', {'questions': paginate(tag_questions, request, 10), 'tag': tag_name })
+
+# @require_http_methods(["POST"])
+# @login_required(login_url="login")
+# @csrf_protect
+# def like(request, image_id):
+#     image = get_object_or_404(Image, pk=image_id)
+#     profile, profile_created = Profile.objects.get_or_create(user=request.user)
+#     image_like, image_like_created = ImageLike.objects.get_or_create(image=image, profile=profile)
+
+#     if not image_like_created:
+#         image_like.delete()
+
+#     return redirect(reverse('index'))
+
+
+# @require_http_methods(["POST"])
+# @login_required(login_url="login")
+# @csrf_protect
+# def like_async(request, image_id):
+#     body = json.loads(request.body)
+#     image = get_object_or_404(Image, pk=image_id)
+#     profile, profile_created = Profile.objects.get_or_create(user=request.user)
+#     image_like, image_like_created = ImageLike.objects.get_or_create(image=image, profile=profile)
+
+#     if not image_like_created:
+#         image_like.delete()
+
+#     body['likes_count'] = ImageLike.objects.filter(image=image).count()
+
+#     return JsonResponse(body)

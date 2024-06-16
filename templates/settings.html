@@ -3,7 +3,7 @@
 {% load bootstrap5 %}
 {% block title %}
   <div class="d-flex gap-3 align-items-center">
-    <h1>Settings: Dr. Pepper</h1>
+    <h1>Settings: {{ user.username }}</h1>
   </div>
 {% endblock %}
 
@@ -71,7 +71,9 @@
 
 
     <form method="post" action="{% url "settings" %}" enctype="multipart/form-data">
-      {% bootstrap_form form %}
+      {% bootstrap_form userform %}
+      {% csrf_token %}
+      {% bootstrap_form profileform %}
       {% csrf_token %}
       <div class="row">
         <div class="mt-2 d-flex align-items-center">

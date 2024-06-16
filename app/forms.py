@@ -37,25 +37,39 @@ class RegisterForm(forms.ModelForm):
         profile.save()
         return user
     
-class EditProfileForm(forms.ModelForm):
+class EditUserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['login', 'email', 'avatar']
+        fields = ['login', 'email']
 
     login = forms.CharField(min_length=5, max_length=20, required=True)
     email = forms.EmailField(required=True, widget=forms.EmailInput)
+    
+    def save(self, commit=True):
+        user = super(EditUserForm, self).save(commit=False)
+        user.email = self.cleaned_data['email']
+        user.username = self.cleaned_data['login']
+        if commit:
+            user.save()
+        return user
+
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['avatar']
+
     avatar = forms.ImageField(required=False)
 
-    def save(self, commit=True):
-        user = User.objects.get(username=self.cleaned_data['login'])
-        user.username = self.cleaned_data['login']
-        user.email = self.cleaned_data['email']
-        user.save()
+    # def save(self, commit=True):
+    #     user = User.objects.get(username=self.cleaned_data['login'])
+    #     user.username = self.cleaned_data['login']
+    #     user.email = self.cleaned_data['email']
+    #     user.save()
         
-        profile = Profile.objects.get(user=user)
-        profile.avatar = self.cleaned_data['avatar']
-        profile.save()
-        return user
+    #     profile = Profile.objects.get(user=user)
+    #     profile.avatar = self.cleaned_data['avatar']
+    #     profile.save()
+    #     return user
     
 class QuestionForm(forms.Form):
     title = forms.CharField(min_length=10, max_length=255, required=True)
