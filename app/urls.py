@@ -1,5 +1,6 @@
 from django.urls import path
-
+from django.conf import settings
+from django.conf.urls.static import static
 from app import views
 
 
@@ -15,3 +16,6 @@ urlpatterns = [
     path('logout/', views.logoutView, name='logout'),
     path('question/<int:question_id>', views.question, name='answer')
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -9,7 +9,7 @@
 
 {% block content %}
 <div class="col-md-10 sm-12">
-  <form method="post" action="{% url "signup" %}" continue="{% url "index" %}">
+  <form method="post" action="{% url "signup" %}" continue="{% url "index" %}" enctype="multipart/form-data">
     {% bootstrap_form form %}
     {% csrf_token %}
     <div class="row">

@@ -56,7 +56,7 @@ def signup(request):
     if request.method == 'GET':
         registerForm = RegisterForm()
     if request.method == 'POST':
-        registerForm = RegisterForm(data=request.POST)
+        registerForm = RegisterForm(data=request.POST, files=request.FILES)
         if registerForm.is_valid():
             user = registerForm.save()
             if user:
@@ -76,7 +76,7 @@ def ask(request):
             question.save()
             if question:
                 question.user = request.user
-                # return redirect(reverse('index'))
+                # return redirect(reverse('question', args=[question.id - 1]))
                 return render(request, 'question_detail.html', {
                             'question': question, 
                             'answersCount': 0,
@@ -109,45 +109,19 @@ def question(request, question_id):
         'form': answerForm
     })
 
-# def addAnswer(request):
-#     return render(request, 'index.html', {'questions': paginate(QUESTIONS, request, 10), 'user': request.user}) 
-#     item = QUESTIONS[question_id - 1]
-#     answers = list(Answer.objects.filter(question=item))
-#     if not request.user.is_authenticated:
-#         return redirect(reverse('login'))
-#     if request.method == 'GET':
-#         answerForm = AnswerForm()
-#     if request.method == 'POST':
-#         answerForm = AnswerForm(data=request.POST)
-#         if answerForm.is_valid():
-#             answer = Answer(text=answerForm.cleaned_data["text"], question=question_id)
-#             answer.question = item
-#             answer.save()
-#             if answer:
-#                 answer.user = request.user
-#                 return render(request, 'question_detail.html', {
-#                     'question': item, 
-#                     'answersCount': len(answers),
-#                     'answers': answers,
-#                     'form': answerForm
-#                 })
-#                 # return question(request, question_id)
-#     return question(request, question_id)
-#     # return render(request, 'question_detail.html', {
-#     #     'question': item, 
-#     #     'answersCount': len(answers),
-#     #     'answers': answers
-#     # })
-
 def settings(request):
     if request.method == 'POST':
-        editForm = EditProfileForm(data=request.POST)
+        editForm = EditProfileForm(data=request.POST, files=request.FILES)
+        editUser = User()
         if editForm.is_valid():
             user = editForm.save()
             if user:
                 return redirect(reverse('index'))
-            
-    return render(request, 'settings.html')
+    else:
+        editForm = EditProfileForm()    
+    return render(request, 'settings.html', {
+        'form': editForm
+    })
 
 def tag(request, tag_name):
     tag_questions = list(Question.objects.get_by_tag(tag_name))

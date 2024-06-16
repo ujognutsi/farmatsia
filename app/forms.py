@@ -44,15 +44,15 @@ class EditProfileForm(forms.ModelForm):
 
     login = forms.CharField(min_length=5, max_length=20, required=True)
     email = forms.EmailField(required=True, widget=forms.EmailInput)
-    avatar = forms.ImageField()
+    avatar = forms.ImageField(required=False)
 
     def save(self, commit=True):
-        user = self.instance
+        user = User.objects.get(username=self.cleaned_data['login'])
         user.username = self.cleaned_data['login']
         user.email = self.cleaned_data['email']
         user.save()
         
-        profile = user.profile
+        profile = Profile.objects.get(user=user)
         profile.avatar = self.cleaned_data['avatar']
         profile.save()
         return user
