@@ -1,0 +1,24 @@
+{% extends "./layouts/base.html" %}
+{% load static %}
+
+{% block title %}
+  <div class="d-flex gap-3 align-items-center">
+    <h1 class="question">Question</h1>
+  </div>
+  {% endblock %}
+
+  {% block content %}
+  <div class="col-8">
+    {% include './components/question.html' with item=question %}
+    <hr>  
+
+    {% include './components/answer.html'%}
+    <form action="post">
+      <div class="border-top pt-3">
+        <textarea id="answer_textarea" rows="5" class="form-control" placeholder="Enter your answer here.."></textarea>
+      </div>
+      <button class="btn btn-outline-success mt-2" type="submit">Answer</button>
+    </form>
+    {% include "./components/pagination.html" with page_obj=questions %}
+  </div>
+{% endblock %}

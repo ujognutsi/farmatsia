@@ -1,0 +1,17 @@
+{% extends "./layouts/base.html" %}
+{% load static %}
+{% block title %}
+  <div class="d-flex gap-3 align-items-center">
+    <h1 class="new_questions">Tag: {{ tag }}</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="col-8">
+    {% for question in questions %}
+      {% include "./components/question.html" with item=question %}  
+    {% endfor %}
+
+    {% include "./components/pagination.html" with page_obj=questions %}
+  </div>
+{% endblock %}
