@@ -1,9 +1,9 @@
 {% extends './layouts/base.html' %}
 {% load static %}
-{% load bootstrap5 %}
 {% block title %}
+{% load django_bootstrap5 %}
   <div class="d-flex gap-3 align-items-center">
-    <h1>Registration</h1>
+    <h1>Регистрация</h1>
   </div>
 {% endblock %}
 
@@ -15,7 +15,7 @@
     <div class="row">
       <div class="mt-2 d-flex align-items-center">
         <div class="col-1"></div>
-        <button class="btn btn-outline-success mt-1 col-1" type="submit">Register!</button>
+        <button class="btn btn-outline-success mt-1 col-3" type="submit">Зарегистрироваться!</button>
       </div>
     </div>
   </form>

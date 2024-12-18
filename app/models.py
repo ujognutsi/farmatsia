@@ -4,13 +4,11 @@ from django.contrib.postgres.fields import ArrayField
 from django.db.models.functions import Coalesce
 from datetime import date
 
-# Create your models here.
 class TagManager(models.Manager):
     pass
 
 class Tag(models.Model):
     name = models.CharField(max_length=255)
-    
     def __str__(self):
         return self.name
 
@@ -19,14 +17,6 @@ class QuestionManager(models.Manager):
         return self.filter(tags__name__icontains=Tag)
 
     def get_hot(self):
-        # SELECT question FROM questionlikes WHERE 
-        # return self.annotate(likes=Coalesce(models.Sum('questionlike'), 0)).order_by('-likes')
-        # q = self.get().id
-        # return self.order_by(Answer.objects.filter(question=q).count).reverse()[0:10]
-
-
-        # вывести вопросы сортировкой по убыванию суммы questionlike с question == id
-        # SELECT * FROM question ORDER BY COUNT(SELECT * FROM questionlike WHERE question == id)
         pass
 
     def get_new(self):
@@ -45,57 +35,60 @@ class Question(models.Model):
 
     def __str__(self):
         return self.title
-    
+
+    @property
+    def likes(self):
+        return self.vote_set.filter(vote_type='like').count()
+
+    @property
+    def dislikes(self):
+        return self.vote_set.filter(vote_type='dislike').count()
 
 class AnswerManager(models.Manager):
     pass
 
 class Answer(models.Model):
-    # title = models.CharField(max_length=255)
     text = models.CharField(max_length=65535)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    # iscorrect = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['created_at']
 
-    def __str__(self):
-        return self.title
+    @property
+    def likes(self):
+        return self.vote_set.filter(vote_type='like').count()
+
+    @property
+    def dislikes(self):
+        return self.vote_set.filter(vote_type='dislike').count()
 
 class ProfileManager(models.Manager):
     pass
 
 class Profile(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(null=False, blank=True, upload_to="uploads")
 
     def __str__(self):
         return self.user.username
 
-class QuestionLikeManager(models.Manager):
-    pass
-
-class QuestionLike(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    constraints = [
-        models.UniqueConstraint(fields=['question', 'user'], name='unique like')
+class Vote(models.Model):
+    VOTE_TYPE_CHOICES = [
+        ('like', 'Like'),
+        ('dislike', 'Dislike'),
     ]
 
-    def __str__(self):
-        return str(self.question_id)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, null=True, blank=True, on_delete=models.CASCADE)
+    answer = models.ForeignKey(Answer, null=True, blank=True, on_delete=models.CASCADE)
+    vote_type = models.CharField(max_length=7, choices=VOTE_TYPE_CHOICES)
 
-class AnswerLikeManager(models.Manager):
-    pass
-
-class AnswerLike(models.Model):
-    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    unique_together = [
-        ['answer', 'user']
-    ]
+    class Meta:
+        unique_together = ('user', 'question')
+        unique_together = ('user', 'answer')
 
     def __str__(self):
-        return self.answer_id
+        return f"{self.user} - {self.vote_type} on {self.question or self.answer}"

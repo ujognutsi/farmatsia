@@ -1,9 +1,9 @@
 {% extends './layouts/base.html' %}
 {% load static %}
-{% load bootstrap5 %}
+{% load django_bootstrap5 %}
 {% block title %}
   <div class="d-flex gap-3 align-items-center">
-    <h1 class="new_question">New question</h1>
+    <h1 class="new_question">Новый вопрос</h1>
   </div>
 {% endblock %}
 
@@ -13,7 +13,7 @@
     {% bootstrap_form form %}
     {% csrf_token %}
     <button class="mb-2 mt-3 btn btn-outline-success" type="submit">
-      ASK!
+      Опубликовать!
     </button>
   </form>
 </div>

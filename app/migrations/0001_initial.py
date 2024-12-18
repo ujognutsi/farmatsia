@@ -47,26 +47,10 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
             ],
         ),
-        migrations.CreateModel(
-            name='QuestionLike',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.question')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.profile')),
-            ],
-        ),
         migrations.AddField(
             model_name='question',
             name='tags',
             field=models.ManyToManyField(blank=True, to='app.tag'),
-        ),
-        migrations.CreateModel(
-            name='AnswerLike',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('answer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.answer')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.profile')),
-            ],
         ),
         migrations.AddField(
             model_name='answer',

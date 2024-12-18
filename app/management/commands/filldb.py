@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from app.models import Profile, Question, QuestionLike, Answer, AnswerLike, Tag, User
+from app.models import Profile, Question, Answer, Tag, User
 import random
 from django.db import *
 
@@ -26,8 +26,10 @@ class Command(BaseCommand):
         print("Tags added")
         questions = []
         for i in range(ratio * 10):
+            randomId = random.randint(0, ratio - 1)
+            # print(User.objects.get(id=randomId))
             questions.append(Question(id=i, title=f"Question #{i}", text=f"Question text #{i}",
-                                      user=User.objects.get(id=random.randint(0, ratio))))
+                                      user=User.objects.get(id=randomId)))
         
         Question.objects.bulk_create(questions)
 
@@ -38,46 +40,10 @@ class Command(BaseCommand):
         answers = []
 
         for i in range(ratio * 100):
-            answers.append(Answer(id=i, title=f"Answer #{i}", text=f"Answer #{i} text", 
+            answers.append(Answer(id=i, text=f"Answer #{i} text", 
                                   question=Question.objects.get(id=random.randint(0, ratio * 10 - 1)),
-                                  user=User.objects.get(id=random.randint(0, ratio))))
+                                  user=User.objects.get(id=random.randint(0, ratio - 1))))
 
         Answer.objects.bulk_create(answers)
         print("Answers added")
-        questionLikes = []
-
-        for i in range(ratio * 101):
-            randquestion = random.randint(0, ratio * 10 - 1)
-            randuser = random.randint(0, ratio - 1)
-            while randquestion == randuser:
-                randquestion = random.randint(0, ratio * 10 - 1)
-                randuser = random.randint(0, ratio - 1)                
-            questionLikes.append(
-                QuestionLike(
-                    id=i, 
-                    question=questions[randquestion], 
-                    user=profiles[randuser]
-                )
-            )
-
-        QuestionLike.objects.bulk_create(questionLikes)
-        print("QuestionLikes added")
-        answerLikes = []
-
-        for i in range(ratio * 101):
-            randanswer = random.randint(0, ratio * 100 - 1)
-            randuser = random.randint(0, ratio - 1)
-            while randanswer == randuser:
-                randanswer = random.randint(0, ratio * 100 - 1)
-                randuser = random.randint(0, ratio - 1)     
-            answerLikes.append(
-                AnswerLike(
-                    id=i,
-                    answer=answers[randanswer], 
-                    user=profiles[randuser]
-                )
-            )
-            
-        AnswerLike.objects.bulk_create(answerLikes)
-
         print("The base is filled")

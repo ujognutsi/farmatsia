@@ -1,9 +1,9 @@
 {% extends "./layouts/base.html" %}
 {% load static %}
-{% load bootstrap5 %}
+{% load django_bootstrap5 %}
 {% block title %}
   <div class="d-flex gap-3 align-items-center">
-    <h1 class="question">Question</h1>
+    <h1 class="question">Вопрос</h1>
   </div>
   {% endblock %}
 
@@ -23,10 +23,10 @@
     <form method="post" action="{% url "answer" question.id %}" continue="{% url "index" %}">
       {% bootstrap_form form %}
       {% csrf_token %}
-      <button class="btn btn-outline-success mt-2" type="submit">Answer</button>
+      <button class="btn btn-outline-success mt-2" type="submit">Ответить</button>
     </form>
 
-    {% include "./components/pagination.html" with page_obj=questions %}
+    {% comment %} {% include "./components/pagination.html" with page_obj=questions %} {% endcomment %}
     
 
     <ul class="messages">

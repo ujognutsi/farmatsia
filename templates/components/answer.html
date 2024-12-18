@@ -6,22 +6,24 @@
       <div class="border w-100 mb-3" style="height: 160px;">
         <img src="{% static 'img/img.jpg'%}" class="img-fluid rounded-start" alt="Oops!">
       </div>
+      <form method="post" action="{% url 'vote_answer' answer.id 'like' %}">
+        {% csrf_token %}
+        <button class="mb-2 mt-3 btn btn-outline-success dislike-button" onclick="" type="submit">Нравится</button>
+      </form>    
+
+      <form method="post" action="{% url 'vote_answer' answer.id 'dislike' %}">
+        {% csrf_token %}
+        <button class="mb-2 mt-3 btn btn-outline-danger dislike-button" onclick="" type="submit">Не нравится</button>
+      </form>    
+      <p class="card-text">Лайков: <span class="like-counter">{{ answer.likes }}</span></p>
+      <p class="card-text">Дизлайков: <span class="dislike-counter">{{ answer.dislikes }}</span></p>
     </div>
 
     <div class="col-md-9">
       <div class="card-body">
         <p class="card-text">{{ answer.text }}</p>
       </div>
-      {% if user == item.user %}
-      {% comment %} <form method="POST" action="{% url "correctanswer" %}"> {% endcomment %}
-      <div class="form-check mt-5" name="correcto">
-        {% comment %} <form method="post" action="{% url "correctanswer" item.id %}"> {% endcomment %}
-          <button type="submit" class="btn btn-success" id="correctbutton">Correct!</button>
-        {% comment %} </form> {% endcomment %}
-      </div>
-      {% endif %}
     </div>      
   </div>
 </article>
 {% endfor %}
-{% comment %} <script src="{% static "js/correctanswer.js" %}" type="text/javascript"></script> {% endcomment %}

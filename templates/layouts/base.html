@@ -1,11 +1,11 @@
 {% load static %}
-{% load bootstrap5 %}
+{% load django_bootstrap5 %}
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>Фармация</title>
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
     <script src="{% static 'js/bootstrap.min.js' %}" type="text/javascript"></script>
     {% csrf_token %}
@@ -13,16 +13,16 @@
   <body>
     <nav class="navbar" style="background-color: #F5FBEF; color: #503D42;">
       <div class="container-sm-fluid container-lg">
-        <a class="navbar-brand" href="{% url "index" %}">AskMalkhasyan</a>
-        <form class="d-flex" role="search">
+        <a class="navbar-brand" href="{% url "index" %}">Фармация</a>
+        <form class="d-flex" role="search" method="get" action="{% url 'search' %}">
           <span class="input-group-text" id="basic-addon1">
             <img src="{% static 'img/loopa.png' %}" alt="" class="loopa_pic" style="max-width: 1rem; max-height: 1rem; user-select: none;">
           </span>
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
+            {{ searchform }}
+          <button class="btn btn-outline-success" type="submit">Поиск</button>
         </form>
-        
-        <button class="btn btn-success"><a href="{% url "ask" %}" class="link link-light link-underline-opacity-0 link-underline-opacity-0-hover">ASK!</a></button>
+
+        <button class="btn btn-success"><a href="{% url "ask" %}" class="link link-light link-underline-opacity-0 link-underline-opacity-0-hover">Задать вопрос!</a></button>
 
         <div class="d-flex justify-content-between gap-3">
 
@@ -35,13 +35,13 @@
             </div>
             <div>{{ user.username }}</div>
             <div>
-              <a href="{% url "settings" %}" class="link">Settings</a>
-              <a href="{% url "logout" %}" class="link">log out</a>
+              <a href="{% url "settings" %}" class="link">Профиль</a>
+              <a href="{% url "logout" %}" class="link">Выйти</a>
             </div>
           {% else %}
             <div>
-              <a href="{% url "login" %}" class="link">log in</a>
-              <a href="{% url "signup" %}" class="link">sign up</a>
+              <a href="{% url "login" %}" class="link">Войти</a>
+              <a href="{% url "signup" %}" class="link">Регистрация</a>
             </div>
           {% endif %}
 
@@ -57,26 +57,19 @@
         {% block content %}
         {% endblock %}
         <div class="col-2">
-          <h3>Popular Tags</h3>
+          <h3>Популярные тэги</h3>
           <div class="row">
             <div class="col">
-              <span class="badge text-bg-primary m-1"><a href="{% url "tag" 'perl' %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">perl</a></span>
-              <span class="badge text-bg-secondary m-1"><a href="{% url "tag" 'python' %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">python</a></span>
-              <span class="badge text-bg-success m-1"><a href="{% url "tag" 'TechnoPark' %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">TechnoPark</a></span>
-              <span class="badge text-bg-danger m-1"><a href="{% url "tag" 'MySQL' %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">MySQL</a></span>
-              <span class="badge text-bg-warning m-1"><a href="{% url "tag" 'django' %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">django</a></span>
-              <span class="badge text-bg-info m-1"><a href="{% url "tag" 'mail_ru' %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">Mail.Ru</a></span>
-              <span class="badge text-bg-light m-1"><a href="{% url "tag" 'Voloshin' %}" class="link-dark link-underline-opacity-0 link-underline-opacity-0-hover">Voloshin</a></span>
-              <span class="badge text-bg-dark m-1"><a href="{% url "tag" 'Firefox' %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">Firefox</a></span>
+              {% for tag in top_tags %}
+                <span class="badge text-bg-primary m-1"><a href="{% url "tag" tag %}" class="link-light link-underline-opacity-0 link-underline-opacity-0-hover">{{ tag }}</a></span>
+              {% endfor %}
             </div>
           </div>
-          <h3 class="mt-5">Best Members</h3>
+          <h3 class="mt-5">Лучшие участники</h3>
           <div>
-            <a href="member.html" class="d-block">Mr. Freeman</a>
-            <a href="member.html" class="d-block">Mr. Freeman</a>
-            <a href="member.html" class="d-block">Mr. Freeman</a>
-            <a href="member.html" class="d-block">Mr. Freeman</a>
-            <a href="member.html" class="d-block">Mr. Freeman</a>
+            {% for user in top_users %}
+            <span class="badge text-bg-success m-1 link-light link-underline-opacity-0 link-underline-opacity-0-hover">{{ user }}</span>
+            {% endfor %}
           </div>
         </div>
       </div>

@@ -1,9 +1,9 @@
 {% extends './layouts/base.html' %}
 {% load static %}
-{% load bootstrap5 %}
 {% block title %}
+{% load django_bootstrap5 %}
   <div class="d-flex gap-3 align-items-center">
-    <h1>Settings: {{ user.username }}</h1>
+    <h1>Профиль: {{ user.username }}</h1>
   </div>
 {% endblock %}
 
@@ -78,7 +78,7 @@
       <div class="row">
         <div class="mt-2 d-flex align-items-center">
           <div class="col-1"></div>
-          <button class="btn btn-outline-success mt-1 col-1" type="submit">Save</button>
+          <button class="btn btn-outline-success mt-1 col-2" type="submit">Сохранить</button>
         </div>
       </div>
     </form>
